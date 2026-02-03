@@ -2,16 +2,21 @@ package com.aysac.di.services;
 
 import com.aysac.di.models.Product;
 import com.aysac.di.repostories.ProductRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class ProductService {
+@Component
+public class ProductServiceImpl implements Productservice {
 
-    private ProductRepository productRepository = new ProductRepository();
+    @Autowired // provee una distancia
+    private ProductRepository productRepositoryImpl;
 
+    @Override
     public List<Product> findAll(){
-        return productRepository.findAll().stream().map(p -> {
+        return productRepositoryImpl.findAll().stream().map(p -> {
             Double priceTax = p.getPrice() * 1.25d;
             //Product newProd = new Product(p.getId(), p.getName(), priceTax.longValue());
             Product newProd = (Product)p.clone();
@@ -20,8 +25,9 @@ public class ProductService {
         }).collect(Collectors.toList());
     }
 
+    @Override
     public Product findById(Long id){
-        return productRepository.findById(id);
+        return productRepositoryImpl.findById(id);
     }
 
 }
